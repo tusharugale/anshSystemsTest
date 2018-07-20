@@ -12,6 +12,8 @@ foreach ($argv as $index => $arg) {
 	}
 }	
 
-
+if($function_name == ''){
+	echo "Please provide function name";exit;
+}
 $cal = new CalculatorClass;
 $cal->$function_name($parameters);
