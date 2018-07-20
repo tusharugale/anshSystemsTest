@@ -23,6 +23,9 @@ class CalculatorClass{
 						if($special_case == 'SLASHN'){
 							$sum += $this->getSlashNSum($param);
 						}
+						if($special_case == 'DELIMITER'){
+							$sum += $this->getDelimiterSum($param);
+						}
 					}else{
 						if($param != ''){
 							$sum += $param;					
@@ -39,6 +42,9 @@ class CalculatorClass{
 		if (strpos($string, '\n') !== false) {
 			return 'SLASHN';
 		}
+		if(preg_match("/\\\\\\\\(.*)\\\\\\\\/", $string, $matches)){
+			return 'DELIMITER';
+		}
 		return false;
 	}
 
@@ -46,7 +52,33 @@ class CalculatorClass{
 		$sum = 0;
 		$parts = explode('\n', $string);
 		foreach ($parts as $part) {
-			$sum += $part;
+			if($part != ''){
+				if(is_numeric($part)){
+					$sum += $part;									
+				}else{
+					echo "Please enter proper numbers";exit;
+				}
+			}
+		}
+		return $sum;
+	}
+
+	public function getDelimiterSum($string){
+		$sum = 0;
+		preg_match("/\\\\\\\\(.*)\\\\\\\\/", $string, $parts);
+		$whole_delimiter = $parts[0];
+		$delimiter = $parts[1];
+		$parts1 = explode($whole_delimiter, $string);
+		$parts2 = explode($delimiter, $parts1[1]);
+
+		foreach ($parts2 as $part) {
+			if($part != ''){
+				if(is_numeric($part)){
+					$sum += $part;									
+				}else{
+					echo "Please enter proper numbers";exit;
+				}			
+			}
 		}
 		return $sum;
 	}
