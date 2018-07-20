@@ -2,6 +2,7 @@
 
 class CalculatorClass{
 	private $negative_numbers = array();
+	private $number_limit = 1000;
 
 	public function sum($parameters){
 		$sum = 0;
@@ -91,6 +92,9 @@ class CalculatorClass{
 		}
 		if($number < 0){
 			$this->negative_numbers[] = $number;
+		}
+		if($number > $this->number_limit){
+			return false;
 		}
 		return true;
 	}
