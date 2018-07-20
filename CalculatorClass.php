@@ -1,6 +1,8 @@
 <?php
 
 class CalculatorClass{
+	private $negative_numbers = array();
+
 	public function sum($parameters){
 		$sum = 0;
 		if(!empty($parameters[0])){
@@ -34,7 +36,12 @@ class CalculatorClass{
 					
 				}
 			}	
-		}			
+		}	
+		if(!empty($this->negative_numbers)){
+			$neg_numbers = implode(',', $this->negative_numbers);
+			echo "Negative numbers (".$neg_numbers.") not allowed";
+			exit;
+		}		
 		echo $sum;
 	}
 
@@ -83,7 +90,7 @@ class CalculatorClass{
 			echo "Please enter proper number";exit;
 		}
 		if($number < 0){
-			echo "Negative numbers not allowed";exit;
+			$this->negative_numbers[] = $number;
 		}
 		return true;
 	}
