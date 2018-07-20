@@ -27,8 +27,8 @@ class CalculatorClass{
 							$sum += $this->getDelimiterSum($param);
 						}
 					}else{
-						if($param != ''){
-							$sum += $param;					
+						if($this->checkForError($param)){
+							$sum += $param;
 						}
 					}				
 					
@@ -52,13 +52,9 @@ class CalculatorClass{
 		$sum = 0;
 		$parts = explode('\n', $string);
 		foreach ($parts as $part) {
-			if($part != ''){
-				if(is_numeric($part)){
-					$sum += $part;									
-				}else{
-					echo "Please enter proper numbers";exit;
-				}
-			}
+			if($this->checkForError($part)){
+				$sum += $part;		
+			}			
 		}
 		return $sum;
 	}
@@ -72,15 +68,23 @@ class CalculatorClass{
 		$parts2 = explode($delimiter, $parts1[1]);
 
 		foreach ($parts2 as $part) {
-			if($part != ''){
-				if(is_numeric($part)){
-					$sum += $part;									
-				}else{
-					echo "Please enter proper numbers";exit;
-				}			
+			if($this->checkForError($part)){
+				$sum += $part;		
 			}
 		}
 		return $sum;
 	}
 	
+	public function checkForError($number){
+		if($number == ''){
+			echo "Please enter number, empty value wont be accepted";exit;
+		}
+		if(!is_numeric($number)){
+			echo "Please enter proper number";exit;
+		}
+		if($number < 0){
+			echo "Negative numbers not allowed";exit;
+		}
+		return true;
+	}
 }
