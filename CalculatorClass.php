@@ -1,11 +1,15 @@
 <?php
 
 class CalculatorClass{
-	public function sum($params){
+	public function sum($parameters){
 		$sum = 0;
-		foreach ($params as $param) {
-			$sum += $param;
+		if(!empty($parameters[0])){
+			$sum += $parameters[0]; 				
+		}
+		if(!empty($parameters[1])){
+			$sum += $parameters[1]; 				
 		}
 		echo $sum;
 	}
+	
 }

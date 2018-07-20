@@ -10,7 +10,7 @@ foreach ($argv as $index => $arg) {
 	if($index > 1){
 		$parameters[] = $arg;
 	}
-}
+}	
 
 
 $cal = new CalculatorClass;
