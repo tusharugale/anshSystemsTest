@@ -3,6 +3,7 @@
 class CalculatorClass{
 	private $negative_numbers = array();
 	private $number_limit = 1000;
+	private $operator = '+';	
 
 	public function sum($parameters){
 		$sum = 0;
@@ -16,7 +17,8 @@ class CalculatorClass{
 	}
 
 	public function add($parameters){
-		$sum = 0;
+		$sum = $this->getInitialSum();
+
 		if(!empty($parameters[0])){
 			$params = explode(',', $parameters[0]);
 			if(!empty($params)){
@@ -24,14 +26,14 @@ class CalculatorClass{
 					$special_case = $this->checkForSpecialChars($param);
 					if($special_case){
 						if($special_case == 'SLASHN'){
-							$sum += $this->getSlashNSum($param);
+							$sum = $this->getCal($this->getSlashNSum($param), $sum);
 						}
 						if($special_case == 'DELIMITER'){
-							$sum += $this->getDelimiterSum($param);
+							$sum = $this->getCal($this->getDelimiterSum($param),$sum);
 						}
 					}else{
 						if($this->checkForError($param)){
-							$sum += $param;
+							$sum = $this->getCal($param,$sum);
 						}
 					}				
 					
@@ -39,12 +41,40 @@ class CalculatorClass{
 			}	
 		}	
 		if(!empty($this->negative_numbers)){
-			$neg_numbers = implode(',', $this->negative_numbers);
-			echo "Negative numbers (".$neg_numbers.") not allowed";
+			if(count($this->negative_numbers) > 1){
+				$neg_numbers = implode(',', $this->negative_numbers);
+				echo "Negative numbers (".$neg_numbers.") not allowed";	
+			}else{
+				echo "Negative numbers not allowed";
+			}
+			
 			exit;
 		}		
 		echo $sum;
 	}
+
+	public function multiply($parameters){
+		$this->operator = '*';
+		$this->add($parameters);
+	}
+
+	public function getInitialSum(){
+		if($this->operator == "+"){
+			return 0;
+		}else{
+			return 1;
+		}
+	}
+
+	public function getCal($a, $b){
+		if($this->operator == "+"){
+			return $a + $b;
+		}
+		if($this->operator == "*"){
+			return $a * $b;
+		}
+	}
+
 
 	public function checkForSpecialChars($string){
 		if (strpos($string, '\n') !== false) {
@@ -57,18 +87,18 @@ class CalculatorClass{
 	}
 
 	public function getSlashNSum($string){
-		$sum = 0;
+		$sum = $this->getInitialSum();
 		$parts = explode('\n', $string);
 		foreach ($parts as $part) {
 			if($this->checkForError($part)){
-				$sum += $part;		
+				$sum = $this->getCal($part,$sum);		
 			}			
 		}
 		return $sum;
 	}
 
 	public function getDelimiterSum($string){
-		$sum = 0;
+		$sum = $this->getInitialSum();
 		preg_match("/\\\\\\\\(.*)\\\\\\\\/", $string, $parts);
 		$whole_delimiter = $parts[0];
 		$delimiter = $parts[1];
@@ -77,7 +107,7 @@ class CalculatorClass{
 
 		foreach ($parts2 as $part) {
 			if($this->checkForError($part)){
-				$sum += $part;		
+				$sum = $this->getCal($part,$sum);		
 			}
 		}
 		return $sum;
